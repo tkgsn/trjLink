@@ -3,7 +3,7 @@ package main;
 import index.AscendNeighbor;
 import index.rtree.RTLeafElement;
 import index.wrtree.WRTree;
-import signatures.temporalEMD.EMDmetric;
+// import signatures.temporalEMD.EMDmetric;
 
 import java.util.*;
 
@@ -11,60 +11,60 @@ import static signatures.Function.cutSignature;
 
 public class Linking {
 
-    public static int[] linearExecute(final Map<String, Map<Integer, Double>> oddSignatures,
-                                      final Map<String, Map<Integer, Double>> evenSignatures,
-                                      final int cutoff, final int topK, final String sigType) {
-        System.out.println("[INFO] Start Linear Linking ...");
-        int[] success = new int[topK + 1];
-        Arrays.fill(success, 0);
+//     public static int[] linearExecute(final Map<String, Map<Integer, Double>> oddSignatures,
+//                                       final Map<String, Map<Integer, Double>> evenSignatures,
+//                                       final int cutoff, final int topK, final String sigType) {
+//         System.out.println("[INFO] Start Linear Linking ...");
+//         int[] success = new int[topK + 1];
+//         Arrays.fill(success, 0);
 
-        final boolean cosine = !sigType.equalsIgnoreCase("time"); // for temporal signature, we use EMD as the metric
-        Map<String, Map<Integer, Double>> reducedSig_even = new HashMap<>();    // to avoid repeated computation
-        for (Map.Entry<String, Map<Integer, Double>> oddEntry : oddSignatures.entrySet()) {
-            String oddObject = oddEntry.getKey();
-            Map<Integer, Double> oddSig = cutSignature(oddEntry.getValue(), cutoff);  // the full-length signatures have already been sorted
+//         final boolean cosine = !sigType.equalsIgnoreCase("time"); // for temporal signature, we use EMD as the metric
+//         Map<String, Map<Integer, Double>> reducedSig_even = new HashMap<>();    // to avoid repeated computation
+//         for (Map.Entry<String, Map<Integer, Double>> oddEntry : oddSignatures.entrySet()) {
+//             String oddObject = oddEntry.getKey();
+//             Map<Integer, Double> oddSig = cutSignature(oddEntry.getValue(), cutoff);  // the full-length signatures have already been sorted
 
-            if (oddSig != null && !oddSig.isEmpty()) {
-                // if top-K NNs are required
-                Queue<AscendNeighbor> NNqueue = new PriorityQueue<>();
+//             if (oddSig != null && !oddSig.isEmpty()) {
+//                 // if top-K NNs are required
+//                 Queue<AscendNeighbor> NNqueue = new PriorityQueue<>();
 
-                // or top-1
-                double maxSim = Double.NEGATIVE_INFINITY;
-                String matchObj = "";
+//                 // or top-1
+//                 double maxSim = Double.NEGATIVE_INFINITY;
+//                 String matchObj = "";
 
-                for (Map.Entry<String, Map<Integer, Double>> evenEntry : evenSignatures.entrySet()) {
-                    String evenObject = evenEntry.getKey();
-                    Map<Integer, Double> evenSig = reducedSig_even.compute(evenObject, (k, v) -> v == null ?
-                            cutSignature(evenEntry.getValue(), cutoff) : v);
-                    if (evenSig != null && !evenSig.isEmpty()) {
-                        float similarity = (float) (cosine ? computeCosineSimilarity(oddSig, evenSig) : EMDmetric.computeSimilarity(oddSig, evenSig));
-                        if (similarity > 0) {
-                            if (topK == 1) {
-                                if (similarity > maxSim) {
-                                    maxSim = similarity;
-                                    matchObj = evenObject;
-                                } else if (similarity == maxSim && oddObject.equals(evenObject)) {
-                                    matchObj = evenObject;
-                                }
-                            } else {
-                                updateNNqueue(NNqueue, topK, evenObject, similarity);
-                            }
-                        }
-                    }
-                }
+//                 for (Map.Entry<String, Map<Integer, Double>> evenEntry : evenSignatures.entrySet()) {
+//                     String evenObject = evenEntry.getKey();
+//                     Map<Integer, Double> evenSig = reducedSig_even.compute(evenObject, (k, v) -> v == null ?
+//                             cutSignature(evenEntry.getValue(), cutoff) : v);
+//                     if (evenSig != null && !evenSig.isEmpty()) {
+//                         float similarity = (float) (cosine ? computeCosineSimilarity(oddSig, evenSig) : EMDmetric.computeSimilarity(oddSig, evenSig));
+//                         if (similarity > 0) {
+//                             if (topK == 1) {
+//                                 if (similarity > maxSim) {
+//                                     maxSim = similarity;
+//                                     matchObj = evenObject;
+//                                 } else if (similarity == maxSim && oddObject.equals(evenObject)) {
+//                                     matchObj = evenObject;
+//                                 }
+//                             } else {
+//                                 updateNNqueue(NNqueue, topK, evenObject, similarity);
+//                             }
+//                         }
+//                     }
+//                 }
 
-                if (topK == 1) {
-                    if (matchObj.equals(oddObject)) {
-                        success[topK]++;
-                    }
-                } else {
-                    checkNNqueue(NNqueue, oddObject, topK, success);
-                }
-            }
-        }
+//                 if (topK == 1) {
+//                     if (matchObj.equals(oddObject)) {
+//                         success[topK]++;
+//                     }
+//                 } else {
+//                     checkNNqueue(NNqueue, oddObject, topK, success);
+//                 }
+//             }
+//         }
 
-        return success;
-    }
+//         return success;
+//     }
 
     public static int[] rtreeBased(final Map<String, Map<Integer, Double>> oddSignatures,
                                    final Map<String, Map<Integer, Double>> evenSignatures,

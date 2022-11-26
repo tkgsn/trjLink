@@ -65,7 +65,8 @@ public class Main {
 
         // temporal signatures don't have any spatial information, so only linear scan is possible
         if(method.equalsIgnoreCase("linear") || sigType.equalsIgnoreCase("time") || sigType.equalsIgnoreCase("temporal")) {
-            success = Linking.linearExecute(oddSignatures, evenSignatures, cutoff, topK, sigType);
+            // success = Linking.linearExecute(oddSignatures, evenSignatures, cutoff, topK, sigType);
+            System.out.println("\n WARNING: DEPRECTED BY SHUN");
         }
         else if(method.equalsIgnoreCase("wr-tree") || method.equalsIgnoreCase("wrtree")){
             final int capacity = 28, fanout = 4;  // the fixed parameters of R-tree, okay with changes

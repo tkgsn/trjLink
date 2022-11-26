@@ -18,8 +18,9 @@ public class Function {
             case "spatial" -> signatures = Spatial.constructSpatial(trajectories, grid);
             case "sequential", "seq" -> signatures = Sequential.constructSequential(trajectories, grid, gramLen);
             case "temporal", "time" -> {
-                cosineSimilarity = false;   // we use EMD for temporal signature based linking
-                signatures = Temporal.constructTemporal(trajectories, binSize);
+                // cosineSimilarity = false;   // we use EMD for temporal signature based linking
+                // signatures = Temporal.constructTemporal(trajectories, binSize);
+                System.out.println("\n WARNING: DEPRECTED BY SHUN");
             }
             case "spatiotemporal", "spatio-temporal", "st" -> signatures = Spatiotemporal.constructSignature(trajectories, grid, gridNum);
         }
